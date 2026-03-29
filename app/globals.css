@@ -16,3 +16,144 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
 }
+
+.theme-dark {
+  --page-bg: #05070d;
+  --ui-text: #f8fbff;
+  --ui-muted: rgba(248, 251, 255, 0.78);
+  --ui-soft: rgba(248, 251, 255, 0.72);
+  --ui-arrow: rgba(248, 251, 255, 0.45);
+  --ui-header-bg: rgba(6, 10, 17, 0.58);
+  --ui-header-border: rgba(255, 255, 255, 0.12);
+  --ui-border-strong: rgba(255, 255, 255, 0.8);
+  --ui-card-bg: rgba(0, 0, 0, 0.62);
+  --ui-card-border: rgba(82, 82, 82, 0.65);
+  --ui-card-border-hover: rgba(115, 115, 115, 0.75);
+  --ui-chip-border: rgba(115, 115, 115, 0.78);
+  --ui-icon-muted: rgba(163, 163, 163, 1);
+  --ui-icon-hover: rgba(255, 255, 255, 1);
+  --ui-footer-border: rgba(255, 255, 255, 0.14);
+  --ui-footer-text: rgba(163, 163, 163, 1);
+  --ui-toggle-bg: rgba(7, 11, 18, 0.72);
+  --ui-toggle-bg-hover: rgba(10, 14, 24, 0.9);
+  --ui-toggle-border: rgba(255, 255, 255, 0.2);
+  --ui-toggle-on: #3b82f6;
+  --ui-toggle-off: rgba(107, 114, 128, 0.7);
+  --ui-toggle-thumb: #ffffff;
+}
+
+.theme-light {
+  --page-bg: #edf3ff;
+  --ui-text: #0f172a;
+  --ui-muted: rgba(15, 23, 42, 0.78);
+  --ui-soft: rgba(15, 23, 42, 0.74);
+  --ui-arrow: rgba(15, 23, 42, 0.5);
+  --ui-header-bg: rgba(255, 255, 255, 0.78);
+  --ui-header-border: rgba(100, 116, 139, 0.35);
+  --ui-border-strong: rgba(15, 23, 42, 0.66);
+  --ui-card-bg: rgba(255, 255, 255, 0.92);
+  --ui-card-border: rgba(71, 85, 105, 0.48);
+  --ui-card-border-hover: rgba(30, 41, 59, 0.62);
+  --ui-chip-border: rgba(71, 85, 105, 0.52);
+  --ui-icon-muted: rgba(30, 41, 59, 0.86);
+  --ui-icon-hover: rgba(15, 23, 42, 1);
+  --ui-footer-border: rgba(100, 116, 139, 0.32);
+  --ui-footer-text: rgba(51, 65, 85, 0.88);
+  --ui-toggle-bg: rgba(255, 255, 255, 0.86);
+  --ui-toggle-bg-hover: rgba(255, 255, 255, 0.96);
+  --ui-toggle-border: rgba(100, 116, 139, 0.42);
+  --ui-toggle-on: #2563eb;
+  --ui-toggle-off: rgba(148, 163, 184, 0.95);
+  --ui-toggle-thumb: #ffffff;
+}
+
+.starfield {
+  transition: opacity 220ms ease;
+}
+
+.starfield--dark {
+  background:
+    radial-gradient(circle at 22% 18%, rgba(118, 145, 192, 0.14), transparent 36%),
+    radial-gradient(circle at 76% 12%, rgba(95, 126, 177, 0.11), transparent 34%),
+    radial-gradient(circle at 52% 84%, rgba(60, 79, 121, 0.1), transparent 42%),
+    linear-gradient(180deg, #06090f 0%, #04070d 50%, #020307 100%);
+}
+
+.starfield--light {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(182, 208, 240, 0.32), transparent 44%),
+    radial-gradient(circle at 80% 12%, rgba(170, 194, 236, 0.28), transparent 40%),
+    radial-gradient(circle at 55% 88%, rgba(190, 210, 240, 0.34), transparent 46%),
+    linear-gradient(180deg, #f3f8ff 0%, #e9f1fe 56%, #dee9fc 100%);
+}
+
+.starfield__nebula {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 15% 55%, rgba(126, 168, 216, 0.08), transparent 42%),
+    radial-gradient(circle at 78% 30%, rgba(89, 121, 185, 0.06), transparent 40%);
+  animation: nebula-float 30s ease-in-out infinite alternate;
+  filter: blur(2px);
+}
+
+.starfield__star {
+  position: absolute;
+  border-radius: 9999px;
+  background: rgba(248, 251, 255, 0.95);
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  transition: background-color 220ms ease, box-shadow 220ms ease;
+  animation:
+    star-twinkle var(--twinkle-duration, 6s) ease-in-out infinite,
+    star-drift var(--drift-duration, 22s) ease-in-out infinite;
+  animation-delay: var(--twinkle-delay, 0s), var(--drift-delay, 0s);
+  box-shadow: 0 0 10px rgba(220, 236, 255, 0.35);
+}
+
+.theme-light .starfield__star {
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.22);
+}
+
+@keyframes star-twinkle {
+
+  0%,
+  100% {
+    opacity: calc(var(--star-opacity, 0.6) * 0.55);
+  }
+
+  50% {
+    opacity: var(--star-opacity, 0.9);
+  }
+}
+
+@keyframes star-drift {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(var(--drift-x, 10px), var(--drift-y, -10px), 0);
+  }
+}
+
+@keyframes nebula-float {
+  0% {
+    transform: translate3d(-1%, -1%, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(1.4%, 0.8%, 0) scale(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .starfield__nebula,
+  .starfield__star {
+    animation: none;
+  }
+}

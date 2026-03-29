@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ExternalLink, GitBranch } from "lucide-react";
-import { type KeyboardEvent, useRef } from "react";
+import { type CSSProperties, type KeyboardEvent, useRef, useState } from "react";
 
 const sectionReveal = {
   initial: { opacity: 0, y: 28 },
@@ -11,14 +11,16 @@ const sectionReveal = {
   transition: { type: "spring" as const, stiffness: 90, damping: 18 },
 };
 
-type Star = {
+type StarSeed = {
   id: number;
   x: number;
   y: number;
   size: number;
   opacity: number;
-  duration: number;
-  delay: number;
+  twinkleDuration: number;
+  twinkleDelay: number;
+  driftDuration: number;
+  driftDelay: number;
   driftX: number;
   driftY: number;
 };
@@ -30,6 +32,12 @@ type Project = {
   githubUrl: string;
   liveUrl: string;
   span: string;
+};
+
+type HeaderToggleProps = {
+  label: string;
+  checked: boolean;
+  onToggle: () => void;
 };
 
 const projects: Project[] = [
@@ -59,15 +67,24 @@ const projects: Project[] = [
   },
 ];
 
-const stars: Star[] = Array.from({ length: 120 }, (_, i) => {
-  const x = (i * 37) % 100;
-  const y = (i * 53) % 100;
-  const size = 1 + ((i * 13) % 10) / 10;
-  const opacity = 0.05 + ((i * 7) % 16) / 100;
-  const duration = 5 + (i % 8) * 0.9;
-  const delay = (i % 11) * 0.3;
-  const driftX = ((i % 5) - 2) * 3;
-  const driftY = ((i % 7) - 3) * 2;
+const seededRandom = (seed: number) => {
+  const value = Math.sin(seed * 9973.135) * 43758.5453;
+  return value - Math.floor(value);
+};
+
+const round = (value: number, digits = 4) => Number(value.toFixed(digits));
+
+const stars: StarSeed[] = Array.from({ length: 90 }, (_, i) => {
+  const x = round(seededRandom(i + 1) * 100);
+  const y = round(seededRandom(i + 11) * 100);
+  const size = round(0.8 + seededRandom(i + 21) * 2, 6);
+  const opacity = round(0.25 + seededRandom(i + 31) * 0.55, 6);
+  const twinkleDuration = round((2.5 + seededRandom(i + 41) * 2.5) / 6, 6);
+  const twinkleDelay = round(seededRandom(i + 51) * 5, 6);
+  const driftDuration = round((16 + seededRandom(i + 61) * 10) / 6, 6);
+  const driftDelay = round(seededRandom(i + 71) * 10, 6);
+  const driftX = round(-10 + seededRandom(i + 81) * 20, 6);
+  const driftY = round(-8 + seededRandom(i + 91) * 16, 6);
 
   return {
     id: i,
@@ -75,18 +92,72 @@ const stars: Star[] = Array.from({ length: 120 }, (_, i) => {
     y,
     size,
     opacity,
-    duration,
-    delay,
+    twinkleDuration,
+    twinkleDelay,
+    driftDuration,
+    driftDelay,
     driftX,
     driftY,
   };
 });
 
+function HeaderToggle({ label, checked, onToggle }: HeaderToggleProps) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      onClick={onToggle}
+      className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--ui-toggle-border)] bg-[color:var(--ui-toggle-bg)] px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[color:var(--ui-text)] transition-colors duration-200 hover:bg-[color:var(--ui-toggle-bg-hover)]"
+    >
+      <span>{label}</span>
+      <span
+        className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors duration-200 ${checked ? "bg-[color:var(--ui-toggle-on)]" : "bg-[color:var(--ui-toggle-off)]"
+          }`}
+      >
+        <span
+          className={`h-3 w-3 rounded-full bg-[color:var(--ui-toggle-thumb)] shadow-sm transition-transform duration-200 ${checked ? "translate-x-3.5" : "translate-x-0.5"
+            }`}
+        />
+      </span>
+    </button>
+  );
+}
+
 export default function Home() {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === "undefined") {
+      return true;
+    }
+    return window.localStorage.getItem("theme-mode") !== "light";
+  });
+  const [isStarAnimationOn, setIsStarAnimationOn] = useState(() => {
+    if (typeof window === "undefined") {
+      return true;
+    }
+    return window.localStorage.getItem("stars-enabled") !== "false";
+  });
   const homeRef = useRef<HTMLElement | null>(null);
   const projectRef = useRef<HTMLElement | null>(null);
   const aboutRef = useRef<HTMLElement | null>(null);
   const headerOffset = 30;
+
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => {
+      const next = !prev;
+      window.localStorage.setItem("theme-mode", next ? "dark" : "light");
+      return next;
+    });
+  };
+
+  const toggleStars = () => {
+    setIsStarAnimationOn((prev) => {
+      const next = !prev;
+      window.localStorage.setItem("stars-enabled", `${next}`);
+      return next;
+    });
+  };
 
   const handleCardAction = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
@@ -160,57 +231,79 @@ export default function Home() {
   };
 
   return (
-    <div className="relative isolate min-h-screen overflow-x-hidden text-white">
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
-        {stars.map((star) => (
-          <motion.span
-            key={star.id}
-            className="absolute rounded-full bg-white will-change-transform"
-            style={{
-              left: `${star.x}%`,
-              top: `${star.y}%`,
-              width: `${star.size}px`,
-              height: `${star.size}px`,
-              opacity: star.opacity,
-            }}
-            animate={{
-              opacity: [star.opacity * 0.45, star.opacity, star.opacity * 0.5],
-              x: [0, star.driftX, 0],
-              y: [0, star.driftY, 0],
-            }}
-            transition={{
-              duration: star.duration,
-              delay: star.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
+    <div
+      className={`relative isolate min-h-screen overflow-x-hidden bg-[color:var(--page-bg)] text-[color:var(--ui-text)] ${isDarkMode ? "theme-dark" : "theme-light"
+        }`}
+    >
+      {isStarAnimationOn && (
+        <div
+          className={`starfield pointer-events-none fixed inset-0 -z-10 overflow-hidden ${isDarkMode ? "starfield--dark" : "starfield--light"
+            }`}
+          aria-hidden
+        >
+          <div className="starfield__nebula" />
+          {stars.map((star) => (
+            <span
+              key={star.id}
+              className="starfield__star"
+              style={
+                {
+                  left: `${star.x}%`,
+                  top: `${star.y}%`,
+                  width: `${star.size}px`,
+                  height: `${star.size}px`,
+                  ["--star-opacity" as string]: `${star.opacity}`,
+                  ["--drift-x" as string]: `${star.driftX}px`,
+                  ["--drift-y" as string]: `${star.driftY}px`,
+                  ["--twinkle-duration" as string]: `${star.twinkleDuration}s`,
+                  ["--twinkle-delay" as string]: `${star.twinkleDelay}s`,
+                  ["--drift-duration" as string]: `${star.driftDuration}s`,
+                  ["--drift-delay" as string]: `${star.driftDelay}s`,
+                } as CSSProperties
+              }
+            />
+          ))}
+        </div>
+      )}
 
-      <header className="fixed top-0 z-[90] w-full border-b border-white/10 bg-black/50 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-6xl items-center justify-center gap-8 px-4 py-4 text-[0.72rem] font-semibold uppercase tracking-[0.3em] text-white/78 sm:gap-14 sm:text-xs">
-          <button
-            type="button"
-            onClick={() => scrollToSection("home")}
-            className="transition-colors duration-300 hover:text-white"
-          >
-            HOME
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollToSection("project")}
-            className="transition-colors duration-300 hover:text-white"
-          >
-            PROJECTS
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollToSection("about")}
-            className="transition-colors duration-300 hover:text-white"
-          >
-            ABOUT
-          </button>
+      <header className="fixed top-0 z-[90] w-full border-b border-[color:var(--ui-header-border)] bg-[color:var(--ui-header-bg)] backdrop-blur-sm">
+        <div className="relative mx-auto flex max-w-6xl items-center justify-center px-4 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.3em] text-[color:var(--ui-muted)] sm:text-xs">
+          <div className="flex items-center gap-5 sm:gap-10">
+            <button
+              type="button"
+              onClick={() => scrollToSection("home")}
+              className="transition-colors duration-300 hover:text-[color:var(--ui-text)]"
+            >
+              HOME
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToSection("project")}
+              className="transition-colors duration-300 hover:text-[color:var(--ui-text)]"
+            >
+              PROJECTS
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToSection("about")}
+              className="transition-colors duration-300 hover:text-[color:var(--ui-text)]"
+            >
+              ABOUT
+            </button>
+          </div>
+
+          <div className="absolute right-4 flex items-center gap-1.5">
+            <HeaderToggle
+              label={isDarkMode ? "Dark" : "Light"}
+              checked={isDarkMode}
+              onToggle={toggleTheme}
+            />
+            <HeaderToggle
+              label="Stars"
+              checked={isStarAnimationOn}
+              onToggle={toggleStars}
+            />
+          </div>
         </div>
       </header>
 
@@ -224,18 +317,18 @@ export default function Home() {
           transition={{ type: "spring", stiffness: 85, damping: 16 }}
         >
           <h1 className="max-w-4xl text-[2.2rem] font-semibold leading-[1.08] tracking-[-0.02em] sm:text-6xl md:text-7xl lg:text-8xl">
-            Don't sweat the BUGS — it happens to the best of us.
+            Don&apos;t sweat the BUGS — it happens to the best of us.
           </h1>
 
-          <p className="mt-9 max-w-2xl text-base leading-8 text-[#F9FAF8]/72 sm:text-lg">
-            Welcome to Kwaq website! I hope you find exactly what you're looking for here —
+          <p className="mt-9 max-w-2xl text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">
+            Welcome to Kwaq website! I hope you find exactly what you&apos;re looking for here —
             or even if you’re just stopping by...
           </p>
 
           <button
             type="button"
             onClick={() => scrollToSection("project")}
-            className="mt-11 inline-flex w-fit self-center rounded-full border border-white px-8 py-3 text-sm font-medium uppercase tracking-[0.14em] opacity-90 transition-opacity duration-300 hover:opacity-100"
+            className="mt-11 inline-flex w-fit self-center rounded-full border border-[color:var(--ui-border-strong)] px-8 py-3 text-sm font-medium uppercase tracking-[0.14em] opacity-90 transition-opacity duration-300 hover:opacity-100"
           >
             Explore More
           </button>
@@ -244,7 +337,7 @@ export default function Home() {
             type="button"
             onClick={() => scrollToSection("project")}
             aria-label="Scroll to projects"
-            className="mt-6 inline-flex items-center justify-center text-2xl text-white/45 transition-colors duration-300 hover:text-white/85"
+            className="mt-6 inline-flex items-center justify-center text-2xl text-[color:var(--ui-arrow)] transition-colors duration-300 hover:text-[color:var(--ui-text)]"
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           >
@@ -263,9 +356,9 @@ export default function Home() {
               <h2 className="text-4xl font-semibold tracking-[-0.02em] sm:text-5xl md:text-6xl">
                 Projects
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[#F9FAF8]/68 sm:text-lg">
+              <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">
                 Let me introduce you to some of the projects I’ve been a part of,
-                feel free to check out y'all !
+                feel free to check out y&apos;all !
               </p>
             </div>
 
@@ -281,7 +374,7 @@ export default function Home() {
                   tabIndex={0}
                   aria-label={`${project.title} live demo`}
                   title="Open the website"
-                  className={`group relative rounded-3xl border border-neutral-800 bg-black/70 p-6 pr-20 transition-colors duration-300 hover:border-neutral-700 sm:p-8 sm:pr-24 cursor-pointer ${project.span}`}
+                  className={`group relative rounded-3xl border border-[color:var(--ui-card-border)] bg-[color:var(--ui-card-bg)] p-6 pr-20 transition-colors duration-300 hover:border-[color:var(--ui-card-border-hover)] sm:p-8 sm:pr-24 cursor-pointer ${project.span}`}
                 >
                   <div className="absolute right-6 top-6 flex items-center gap-2 sm:right-8 sm:top-8">
                     <a
@@ -290,7 +383,7 @@ export default function Home() {
                       rel="noreferrer noopener"
                       onClick={(e) => e.stopPropagation()}
                       aria-label={`${project.title} GitHub repository`}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-neutral-700 text-neutral-500 transition-colors duration-300 hover:text-white focus-visible:text-white group-hover:text-white"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[color:var(--ui-chip-border)] text-[color:var(--ui-icon-muted)] transition-colors duration-300 hover:text-[color:var(--ui-icon-hover)] focus-visible:text-[color:var(--ui-icon-hover)] group-hover:text-[color:var(--ui-icon-hover)]"
                     >
                       <GitBranch strokeWidth={1.5} className="h-4 w-4" aria-hidden />
                     </a>
@@ -300,7 +393,7 @@ export default function Home() {
                       rel="noreferrer noopener"
                       onClick={(e) => e.stopPropagation()}
                       aria-label={`${project.title} live demo`}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-neutral-700 text-neutral-500 transition-colors duration-300 hover:text-white focus-visible:text-white group-hover:text-white"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[color:var(--ui-chip-border)] text-[color:var(--ui-icon-muted)] transition-colors duration-300 hover:text-[color:var(--ui-icon-hover)] focus-visible:text-[color:var(--ui-icon-hover)] group-hover:text-[color:var(--ui-icon-hover)]"
                     >
                       <ExternalLink strokeWidth={1.5} className="h-4 w-4" aria-hidden />
                     </a>
@@ -308,14 +401,14 @@ export default function Home() {
                   <h3 className="text-2xl font-semibold tracking-[-0.01em] sm:text-3xl">
                     {project.title}
                   </h3>
-                  <p className="mt-4 text-sm leading-7 text-[#F9FAF8]/72 sm:text-base sm:leading-8">
+                  <p className="mt-4 text-sm leading-7 text-[color:var(--ui-soft)] sm:text-base sm:leading-8">
                     {project.desc}
                   </p>
                   <div className="mt-6 flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full border border-neutral-700 px-3 py-1 text-xs uppercase tracking-[0.12em] text-white/75"
+                        className="rounded-full border border-[color:var(--ui-chip-border)] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[color:var(--ui-muted)]"
                       >
                         {tag}
                       </span>
@@ -335,12 +428,44 @@ export default function Home() {
         >
           <div className="max-w-4xl">
             <h2 className="text-4xl font-semibold tracking-[-0.02em] sm:text-5xl md:text-6xl">
-              Deep dive into my philosophy...
+              I'm very grateful that you came here !
             </h2>
-            <p className="mt-8 text-base leading-8 text-[#F9FAF8]/70 sm:text-lg">
-              I build products where engineering quality and visual restraint
-              reinforce each other. Every motion, layer, and API decision exists
-              to improve confidence, comprehension, and long-term maintainability.
+            <p className="mt-8 text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">
+              Software Developer | Creative Explorer | Community Enthusiast
+            </p>
+            <p className="mt-8 text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">
+              I am a Computer Science graduate from FPT University, where I developed
+              a versatile coding palette in C, C#, Java, and more, alongside essential
+              soft skills like effective communication and critical thinking.
+            </p>
+            <p className="mt-8 text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">
+              My journey spans from building robust software solutions at BrightBrain
+              Vietnam to navigating the high-stakes world of financial consulting at
+              Manulife. This diverse experience helps me bridge complex logic with
+              user-centric design.
+            </p>
+            <p className="mt-8 text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">What defines me:</p>
+            <ul className="mt-4 space-y-4 text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">
+              <li>
+                <span className="font-semibold text-[color:var(--ui-text)]">Proactive Learner:</span> I have
+                participated in projects of many scales, from early prototypes to
+                production-ready products.
+              </li>
+              <li>
+                <span className="font-semibold text-[color:var(--ui-text)]">Creative Soul:</span> I am
+                passionate about photography, video editing, and outdoor community
+                activities.
+              </li>
+              <li>
+                <span className="font-semibold text-[color:var(--ui-text)]">Problem Solver:</span> I am
+                dedicated to refining "good" into "great" by embracing feedback and
+                new technologies.
+              </li>
+            </ul>
+            <p className="mt-8 text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">
+              Looking for a dedicated partner for your next venture? Let&apos;s connect via
+              the footer. For a full professional breakdown, feel free to visit my
+              LinkedIn.
             </p>
           </div>
         </motion.section>
@@ -348,9 +473,9 @@ export default function Home() {
         <motion.footer
           id="contact"
           {...sectionReveal}
-          className="border-t border-white/10 py-8 sm:py-10"
+          className="border-t border-[color:var(--ui-footer-border)] py-8 sm:py-10"
         >
-          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs tracking-[0.08em] text-neutral-500">
+          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs tracking-[0.08em] text-[color:var(--ui-footer-text)]">
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
               {[
                 ["GitHub", "https://github.com/kwaqtech"],
@@ -369,7 +494,7 @@ export default function Home() {
                   rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
                   aria-label={label}
                   title={label}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 transition-colors duration-300 hover:text-neutral-300"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[color:var(--ui-footer-border)] transition-colors duration-300 hover:text-[color:var(--ui-icon-hover)]"
                 >
                   {renderSocialIcon(label)}
                   <span className="sr-only">{label}</span>
