@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, GitBranch } from "lucide-react";
+import { ExternalLink, GitBranch, Menu, X } from "lucide-react";
 import { type CSSProperties, type KeyboardEvent, useRef, useState } from "react";
 
 const sectionReveal = {
@@ -109,15 +109,15 @@ function HeaderToggle({ label, checked, onToggle }: HeaderToggleProps) {
       aria-checked={checked}
       aria-label={label}
       onClick={onToggle}
-      className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--ui-toggle-border)] bg-[color:var(--ui-toggle-bg)] px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[color:var(--ui-text)] transition-colors duration-200 hover:bg-[color:var(--ui-toggle-bg-hover)]"
+      className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[color:var(--ui-toggle-border)] bg-[color:var(--ui-toggle-bg)] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ui-text)] transition-colors duration-200 hover:bg-[color:var(--ui-toggle-bg-hover)]"
     >
       <span>{label}</span>
       <span
-        className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors duration-200 ${checked ? "bg-[color:var(--ui-toggle-on)]" : "bg-[color:var(--ui-toggle-off)]"
+        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200 ${checked ? "bg-[color:var(--ui-toggle-on)]" : "bg-[color:var(--ui-toggle-off)]"
           }`}
       >
         <span
-          className={`h-3 w-3 rounded-full bg-[color:var(--ui-toggle-thumb)] shadow-sm transition-transform duration-200 ${checked ? "translate-x-3.5" : "translate-x-0.5"
+          className={`h-4 w-4 rounded-full bg-[color:var(--ui-toggle-thumb)] shadow-sm transition-transform duration-200 ${checked ? "translate-x-4" : "translate-x-0.5"
             }`}
         />
       </span>
@@ -126,6 +126,7 @@ function HeaderToggle({ label, checked, onToggle }: HeaderToggleProps) {
 }
 
 export default function Home() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window === "undefined") {
       return true;
@@ -171,6 +172,8 @@ export default function Home() {
   };
 
   const scrollToSection = (section: "home" | "project" | "about") => {
+    setIsMobileMenuOpen(false);
+
     const map = {
       home: homeRef,
       project: projectRef,
@@ -267,8 +270,18 @@ export default function Home() {
       )}
 
       <header className="fixed top-0 z-[90] w-full border-b border-[color:var(--ui-header-border)] bg-[color:var(--ui-header-bg)] backdrop-blur-sm">
-        <div className="relative mx-auto flex max-w-6xl items-center justify-center px-4 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.3em] text-[color:var(--ui-muted)] sm:text-xs">
-          <div className="flex items-center gap-5 sm:gap-10">
+        <div className="relative mx-auto flex max-w-6xl items-center justify-between px-3 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.3em] text-[color:var(--ui-muted)] sm:justify-center sm:px-4 sm:py-3 sm:text-xs">
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileMenuOpen}
+            className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-lg border border-[color:var(--ui-header-border)] text-[color:var(--ui-text)] sm:hidden"
+          >
+            {isMobileMenuOpen ? <X className="h-4 w-4" aria-hidden /> : <Menu className="h-4 w-4" aria-hidden />}
+          </button>
+
+          <div className="hidden items-center gap-5 sm:flex sm:gap-10">
             <button
               type="button"
               onClick={() => scrollToSection("home")}
@@ -292,7 +305,7 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="absolute right-4 flex items-center gap-1.5">
+          <div className="flex items-center gap-1 sm:absolute sm:right-4 sm:gap-1.5">
             <HeaderToggle
               label={isDarkMode ? "Dark" : "Light"}
               checked={isDarkMode}
@@ -305,22 +318,50 @@ export default function Home() {
             />
           </div>
         </div>
+
+        {isMobileMenuOpen && (
+          <div className="border-t border-[color:var(--ui-header-border)] px-3 pb-3 pt-2 sm:hidden">
+            <nav className="flex flex-col gap-1">
+              <button
+                type="button"
+                onClick={() => scrollToSection("home")}
+                className="min-h-10 rounded-lg px-3 text-left text-xs font-semibold tracking-[0.16em] text-[color:var(--ui-text)] transition-colors duration-200 hover:bg-[color:var(--ui-toggle-bg)]"
+              >
+                HOME
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("project")}
+                className="min-h-10 rounded-lg px-3 text-left text-xs font-semibold tracking-[0.16em] text-[color:var(--ui-text)] transition-colors duration-200 hover:bg-[color:var(--ui-toggle-bg)]"
+              >
+                PROJECTS
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("about")}
+                className="min-h-10 rounded-lg px-3 text-left text-xs font-semibold tracking-[0.16em] text-[color:var(--ui-text)] transition-colors duration-200 hover:bg-[color:var(--ui-toggle-bg)]"
+              >
+                ABOUT
+              </button>
+            </nav>
+          </div>
+        )}
       </header>
 
-      <main className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-20 pt-20 sm:px-6 lg:px-8">
+      <main className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-20 lg:px-8">
         <motion.section
           ref={homeRef}
           id="home"
-          className="flex min-h-[90vh] flex-col items-center justify-center text-center"
+          className="flex min-h-[86vh] flex-col items-center justify-center text-center sm:min-h-[90vh]"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 85, damping: 16 }}
         >
-          <h1 className="max-w-4xl text-[2.2rem] font-semibold leading-[1.08] tracking-[-0.02em] sm:text-6xl md:text-7xl lg:text-8xl">
+          <h1 className="max-w-4xl text-4xl font-semibold leading-[1.08] tracking-[-0.02em] sm:text-6xl md:text-7xl lg:text-8xl">
             Don&apos;t sweat the BUGS — it happens to the best of us.
           </h1>
 
-          <p className="mt-9 max-w-2xl text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">
+          <p className="mt-6 max-w-2xl text-[0.95rem] leading-7 text-[color:var(--ui-soft)] sm:mt-9 sm:text-lg sm:leading-8">
             Welcome to Kwaq website! I hope you find exactly what you&apos;re looking for here —
             or even if you’re just stopping by...
           </p>
@@ -328,7 +369,7 @@ export default function Home() {
           <button
             type="button"
             onClick={() => scrollToSection("project")}
-            className="mt-11 inline-flex w-fit self-center rounded-full border border-[color:var(--ui-border-strong)] px-8 py-3 text-sm font-medium uppercase tracking-[0.14em] opacity-90 transition-opacity duration-300 hover:opacity-100"
+            className="mt-8 inline-flex min-h-10 w-fit self-center rounded-full border border-[color:var(--ui-border-strong)] px-6 py-2.5 text-xs font-medium uppercase tracking-[0.12em] opacity-90 transition-opacity duration-300 hover:opacity-100 sm:mt-11 sm:px-8 sm:py-3 sm:text-sm sm:tracking-[0.14em]"
           >
             Explore More
           </button>
@@ -349,14 +390,14 @@ export default function Home() {
           ref={projectRef}
           id="projects"
           {...sectionReveal}
-          className="min-h-[80vh] scroll-mt-[96px] pt-8 pb-14 sm:pt-10 sm:pb-18 lg:pt-12"
+          className="min-h-[80vh] scroll-mt-[96px] pt-6 pb-12 sm:pt-10 sm:pb-18 lg:pt-12"
         >
           <div className="mx-auto w-full max-w-5xl">
-            <div className="mb-12 text-center sm:mb-16">
-              <h2 className="text-4xl font-semibold tracking-[-0.02em] sm:text-5xl md:text-6xl">
+            <div className="mb-10 text-center sm:mb-16">
+              <h2 className="text-3xl font-semibold tracking-[-0.02em] sm:text-5xl md:text-6xl">
                 Projects
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">
+              <p className="mx-auto mt-5 max-w-2xl text-[0.95rem] leading-7 text-[color:var(--ui-soft)] sm:mt-6 sm:text-lg sm:leading-8">
                 Let me introduce you to some of the projects I’ve been a part of,
                 feel free to check out y&apos;all !
               </p>
@@ -374,9 +415,9 @@ export default function Home() {
                   tabIndex={0}
                   aria-label={`${project.title} live demo`}
                   title="Open the website"
-                  className={`group relative rounded-3xl border border-[color:var(--ui-card-border)] bg-[color:var(--ui-card-bg)] p-6 pr-20 transition-colors duration-300 hover:border-[color:var(--ui-card-border-hover)] sm:p-8 sm:pr-24 cursor-pointer ${project.span}`}
+                  className={`group relative rounded-3xl border border-[color:var(--ui-card-border)] bg-[color:var(--ui-card-bg)] p-5 pr-16 transition-colors duration-300 hover:border-[color:var(--ui-card-border-hover)] sm:p-8 sm:pr-24 cursor-pointer ${project.span}`}
                 >
-                  <div className="absolute right-6 top-6 flex items-center gap-2 sm:right-8 sm:top-8">
+                  <div className="absolute right-4 top-4 flex items-center gap-2 sm:right-8 sm:top-8">
                     <a
                       href={project.githubUrl}
                       target="_blank"
@@ -398,10 +439,10 @@ export default function Home() {
                       <ExternalLink strokeWidth={1.5} className="h-4 w-4" aria-hidden />
                     </a>
                   </div>
-                  <h3 className="text-2xl font-semibold tracking-[-0.01em] sm:text-3xl">
+                  <h3 className="text-xl font-semibold tracking-[-0.01em] sm:text-3xl">
                     {project.title}
                   </h3>
-                  <p className="mt-4 text-sm leading-7 text-[color:var(--ui-soft)] sm:text-base sm:leading-8">
+                  <p className="mt-3 text-sm leading-6 text-[color:var(--ui-soft)] sm:mt-4 sm:text-base sm:leading-8">
                     {project.desc}
                   </p>
                   <div className="mt-6 flex flex-wrap gap-2">
@@ -427,8 +468,8 @@ export default function Home() {
           className="flex min-h-[78vh] scroll-mt-[96px] items-center py-8 sm:py-10"
         >
           <div className="max-w-4xl">
-            <h2 className="text-4xl font-semibold tracking-[-0.02em] sm:text-5xl md:text-6xl">
-              I'm very grateful that you came here !
+            <h2 className="text-3xl font-semibold tracking-[-0.02em] sm:text-5xl md:text-6xl">
+              I&apos;m very grateful that you came here !
             </h2>
             <p className="mt-8 text-base leading-8 text-[color:var(--ui-soft)] sm:text-lg">
               Software Developer | Creative Explorer | Community Enthusiast
@@ -458,7 +499,7 @@ export default function Home() {
               </li>
               <li>
                 <span className="font-semibold text-[color:var(--ui-text)]">Problem Solver:</span> I am
-                dedicated to refining "good" into "great" by embracing feedback and
+                dedicated to refining &quot;good&quot; into &quot;great&quot; by embracing feedback and
                 new technologies.
               </li>
             </ul>

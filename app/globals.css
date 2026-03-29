@@ -157,3 +157,23 @@ body {
     animation: none;
   }
 }
+
+@media (max-width: 767px) {
+
+  .starfield__nebula {
+    filter: blur(1px);
+    opacity: 0.7;
+  }
+
+  .starfield__star {
+    box-shadow: 0 0 6px rgba(220, 236, 255, 0.25);
+  }
+
+  .theme-light .starfield__star {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.16);
+  }
+
+  .starfield .starfield__star:nth-child(n + 56) {
+    display: none;
+  }
+}
