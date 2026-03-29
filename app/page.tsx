@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef } from "react";
+import { ExternalLink, GitBranch } from "lucide-react";
+import { type KeyboardEvent, useRef } from "react";
 
 const sectionReveal = {
   initial: { opacity: 0, y: 28 },
@@ -21,6 +22,42 @@ type Star = {
   driftX: number;
   driftY: number;
 };
+
+type Project = {
+  title: string;
+  desc: string;
+  tags: string[];
+  githubUrl: string;
+  liveUrl: string;
+  span: string;
+};
+
+const projects: Project[] = [
+  {
+    title: "Presist",
+    desc: "Presist is an innovative presentation support tool designed to empower speakers by bridging the gap between static slides and dynamic delivery. Unlike traditional slideshow software, Presist focuses on the presenter's performance rather than just the visual aids.",
+    tags: ["Next.js", "TypeScript", "Tailwind"],
+    githubUrl: "https://tmkamal.github.io/under-construction-template/",
+    liveUrl: "https://presist.app/",
+    span: "md:col-span-2",
+  },
+  {
+    title: "Xom Connect",
+    desc: "Xom Connect is a mobile-first social platform designed to bring neighbors together. Whether you're looking to borrow a ladder, give away extra fruit from your garden, or need urgent SOS assistance, Xom Connect prioritizes what is happening near you over global noise.",
+    tags: ["React", "TypeScript", "CSS", "PLpgSQL", "Javascript"],
+    githubUrl: "https://github.com/kwaqtech/xom-connect",
+    liveUrl: "https://tmkamal.github.io/under-construction-template/",
+    span: "",
+  },
+  {
+    title: "Price Guard",
+    desc: "PriceGuard is a powerful Chrome Extension and API backend that takes the guesswork out of online shopping. It automatically detects products on major Vietnamese marketplaces and shows you the best deals across the web in real-time.",
+    tags: ["TypeScript", "Manifest V3"],
+    githubUrl: "https://github.com/kwaqtech/PriceGuard",
+    liveUrl: "https://tmkamal.github.io/under-construction-template/",
+    span: "",
+  },
+];
 
 const stars: Star[] = Array.from({ length: 120 }, (_, i) => {
   const x = (i * 37) % 100;
@@ -50,6 +87,17 @@ export default function Home() {
   const projectRef = useRef<HTMLElement | null>(null);
   const aboutRef = useRef<HTMLElement | null>(null);
   const headerOffset = 30;
+
+  const handleCardAction = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const handleCardKeyDown = (e: KeyboardEvent<HTMLElement>, url: string) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleCardAction(url);
+    }
+  };
 
   const scrollToSection = (section: "home" | "project" | "about") => {
     const map = {
@@ -176,12 +224,12 @@ export default function Home() {
           transition={{ type: "spring", stiffness: 85, damping: 16 }}
         >
           <h1 className="max-w-4xl text-[2.2rem] font-semibold leading-[1.08] tracking-[-0.02em] sm:text-6xl md:text-7xl lg:text-8xl">
-            Crafting calm, powerful digital systems.
+            Don't sweat the BUGS — it happens to the best of us.
           </h1>
 
           <p className="mt-9 max-w-2xl text-base leading-8 text-[#F9FAF8]/72 sm:text-lg">
-            Senior full-stack engineer focused on architecture, usability, and
-            motion that feels intentional rather than decorative.
+            Welcome to Kwaq website! I hope you find exactly what you're looking for here —
+            or even if you’re just stopping by...
           </p>
 
           <button
@@ -189,7 +237,7 @@ export default function Home() {
             onClick={() => scrollToSection("project")}
             className="mt-11 inline-flex w-fit self-center rounded-full border border-white px-8 py-3 text-sm font-medium uppercase tracking-[0.14em] opacity-90 transition-opacity duration-300 hover:opacity-100"
           >
-            Explore Projects
+            Explore More
           </button>
 
           <motion.button
@@ -213,41 +261,50 @@ export default function Home() {
           <div className="mx-auto w-full max-w-5xl">
             <div className="mb-12 text-center sm:mb-16">
               <h2 className="text-4xl font-semibold tracking-[-0.02em] sm:text-5xl md:text-6xl">
-                Selected Projects
+                Projects
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[#F9FAF8]/68 sm:text-lg">
-                Focused product work built with precision engineering, calm
-                interfaces, and measurable outcomes.
+                Let me introduce you to some of the projects I’ve been a part of,
+                feel free to check out y'all !
               </p>
             </div>
 
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-              {[
-                {
-                  title: "Project Alpha",
-                  desc: "Performance-first product platform with modular frontend architecture and reliable delivery workflows.",
-                  tags: ["Next.js", "TypeScript", "Tailwind"],
-                  span: "md:col-span-2",
-                },
-                {
-                  title: "Project Beta",
-                  desc: "Data-rich interface system optimized for clarity under complexity with progressive disclosure patterns.",
-                  tags: ["React", "Motion", "Accessibility"],
-                  span: "",
-                },
-                {
-                  title: "Project Gamma",
-                  desc: "Design-engineering bridge from prototyping to production while preserving consistency and speed.",
-                  tags: ["Design Systems", "SSR", "DX"],
-                  span: "",
-                },
-              ].map((project) => (
+              {projects.map((project) => (
                 <motion.article
                   key={project.title}
                   whileHover={{ y: -3 }}
                   transition={{ type: "spring", stiffness: 240, damping: 20 }}
-                  className={`rounded-3xl border border-neutral-800 bg-black/70 p-6 sm:p-8 ${project.span}`}
+                  onClick={() => handleCardAction(project.liveUrl)}
+                  onKeyDown={(e) => handleCardKeyDown(e, project.liveUrl)}
+                  role="link"
+                  tabIndex={0}
+                  aria-label={`${project.title} live demo`}
+                  title="Open the website"
+                  className={`group relative rounded-3xl border border-neutral-800 bg-black/70 p-6 pr-20 transition-colors duration-300 hover:border-neutral-700 sm:p-8 sm:pr-24 cursor-pointer ${project.span}`}
                 >
+                  <div className="absolute right-6 top-6 flex items-center gap-2 sm:right-8 sm:top-8">
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={`${project.title} GitHub repository`}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-neutral-700 text-neutral-500 transition-colors duration-300 hover:text-white focus-visible:text-white group-hover:text-white"
+                    >
+                      <GitBranch strokeWidth={1.5} className="h-4 w-4" aria-hidden />
+                    </a>
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={`${project.title} live demo`}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-neutral-700 text-neutral-500 transition-colors duration-300 hover:text-white focus-visible:text-white group-hover:text-white"
+                    >
+                      <ExternalLink strokeWidth={1.5} className="h-4 w-4" aria-hidden />
+                    </a>
+                  </div>
                   <h3 className="text-2xl font-semibold tracking-[-0.01em] sm:text-3xl">
                     {project.title}
                   </h3>
