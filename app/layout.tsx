@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Playfair_Display } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space",
-  subsets: ["latin"],
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Portfolio",
-  description: "Personal portfolio landing page",
+  description: "Personal portfolio",
 };
 
 export default function RootLayout({
@@ -23,8 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${playfair.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased dark`}>
+      <body className="min-h-[100dvh] flex flex-col font-sans bg-background text-foreground">
+        <div className="noise-overlay" />
+        {children}
+      </body>
     </html>
   );
 }
