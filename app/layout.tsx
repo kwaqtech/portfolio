@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
+import { AppShell } from "@/components/layout/AppShell";
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Personal portfolio",
+  title: "Minh Quang Cao | Command Center",
+  description: "Software Engineer Portfolio",
 };
 
 export default function RootLayout({
@@ -14,10 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased dark`}>
-      <body className="min-h-[100dvh] flex flex-col font-sans bg-background text-foreground">
-        <div className="noise-overlay" />
-        {children}
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} antialiased dark`}>
+      <body>
+        <AppShell>
+          {children}
+        </AppShell>
       </body>
     </html>
   );
