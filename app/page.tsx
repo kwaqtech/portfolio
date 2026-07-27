@@ -8,7 +8,7 @@ const sectionReveal = {
   initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.15 },
-  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 };
 
 type Project = {
@@ -84,6 +84,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -353,7 +354,7 @@ export default function Home() {
                 </li>
                 <li className="border border-[color:var(--ui-border)] p-4">
                   <span className="mb-2 block font-bold text-[color:var(--ui-text)]">Problem Solver</span>
-                  <span className="text-xs text-[color:var(--ui-soft)]">Dedicated to refining "good" into "great" by embracing feedback and new technologies.</span>
+                  <span className="text-xs text-[color:var(--ui-soft)]">Dedicated to refining &quot;good&quot; into &quot;great&quot; by embracing feedback and new technologies.</span>
                 </li>
               </ul>
             </div>
