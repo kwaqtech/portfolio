@@ -1,0 +1,264 @@
+
+=== DIRECTORY TREE (max depth 3, source files only) ===
+.github
+.github\workflows
+.github\workflows\nextjs.yml
+.gitignore
+AGENTS.md
+app
+app\about
+app\about\page.tsx
+app\contact
+app\contact\page.tsx
+app\experience
+app\experience\page.tsx
+app\favicon.ico
+app\globals.css
+app\layout.tsx
+app\page.tsx
+app\projects
+app\projects\[slug]
+app\projects\[slug]\client.tsx
+app\projects\[slug]\page.tsx
+app\projects\page.tsx
+CLAUDE.md
+components
+components\layout
+components\layout\AppShell.tsx
+components\layout\Sidebar.tsx
+components\sections
+components\ui
+components\ui\AnimatedText.tsx
+components\ui\Button.tsx
+components\ui\CommandMenu.tsx
+components\ui\DoubleBezelCard.tsx
+data
+data\projects.ts
+docs
+docs\codebase
+docs\codebase\.codebase-scan.txt
+eslint.config.mjs
+lib
+lib\utils.ts
+LICENSE
+next-env.d.ts
+next.config.ts
+package-lock.json
+package.json
+postcss.config.mjs
+Prompt.md
+public
+public\file.svg
+public\globe.svg
+public\next.svg
+public\vercel.svg
+public\window.svg
+README.md
+tsconfig.json
+
+=== STACK DETECTION (manifest files) ===
+
+--- package-lock.json ---
+{
+  "name": "my-portfolio",
+  "version": "0.1.0",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "my-portfolio",
+      "version": "0.1.0",
+      "dependencies": {
+        "clsx": "^2.1.1",
+        "cmdk": "^1.1.1",
+        "framer-motion": "^12.38.0",
+        "geist": "^1.7.2",
+        "lucide-react": "^1.27.0",
+        "next": "16.2.1",
+        "react": "19.2.4",
+        "react-dom": "19.2.4",
+        "tailwind-merge": "^3.6.0"
+      },
+      "devDependencies": {
+        "@tailwindcss/postcss": "^4",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "eslint": "^9",
+        "eslint-config-next": "16.2.1",
+        "tailwindcss": "^4",
+        "typescript": "^5"
+      }
+    },
+    "node_modules/@alloc/quick-lru": {
+      "version": "5.2.0",
+      "resolved": "https://registry.npmjs.org/@alloc/quick-lru/-/quick-lru-5.2.0.tgz",
+      "integrity": "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==",
+      "dev": true,
+      "license": "MIT",
+      "engines": {
+        "node": ">=10"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/sindresorhus"
+      }
+    },
+    "node_modules/@babel/code-frame": {
+      "version": "7.29.0",
+      "resolved": "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.29.0.tgz",
+      "integrity": "sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "@babel/helper-validator-identifier": "^7.28.5",
+        "js-tokens": "^4.0.0",
+        "picocolors": "^1.1.1"
+      },
+      "engines": {
+        "node": ">=6.9.0"
+      }
+    },
+    "node_modules/@babel/compat-data": {
+      "version": "7.29.0",
+      "resolved": "https://registry.npmjs.org/@babel/compat-data/-/compat-data-7.29.0.tgz",
+      "integrity": "sha512-T1NCJqT/j9+cn8fvkt7jtwbLBfLC/1y1c7NtCeXFRgzGTsafi68MRv8yzkYSapBnFA6L3U2VSc02ciDzoAJhJg==",
+      "dev": true,
+      "license": "MIT",
+      "engines": {
+        "node": ">=6.9.0"
+      }
+    },
+    "node_modules/@babel/core": {
+      "version": "7.29.0",
+      "resolved": "https://registry.npmjs.org/@babel/core/-/core-7.29.0.tgz",
+      "integrity": "sha512-CGOfOJqWjg2qW/Mb6zNsDm+u5vFQ8DxXfbM09z69p5Z6+mE1ikP2jUXw+j42Pf1XTYED2Rni5f95npYeuwMDQA==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "@babel/code-frame": "^7.29.0",
+        "@babel/generator": "^7.29.0",
+        "@babel/helper-compilation-targets": "^7.28.6",
+        "@babel/helper-module-transforms": "^7.28.6",
+
+[TRUNCATED] Showing first 80 of 7147 lines.
+--- package.json ---
+{
+  "name": "my-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "framer-motion": "^12.38.0",
+    "geist": "^1.7.2",
+    "lucide-react": "^1.27.0",
+    "next": "16.2.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
+
+
+=== ENTRY POINTS ===
+No common entry points found. Check 'main' or 'scripts.start' in manifest files above.
+
+=== LINTING AND FORMATTING CONFIG ===
+Found: eslint.config.mjs
+Found: tsconfig.json
+
+=== ENVIRONMENT VARIABLE TEMPLATES ===
+No .env.example or .env.template found. Identify required environment variables by searching the code and config for environment variable reads.
+
+=== TODO / FIXME / HACK (production code only, test dirs excluded) ===
+None found.
+
+=== GIT RECENT COMMITS (last 20) ===
+4d0a5db fix: resolve generateStaticParams issue for static export
+621f504 feat: implement Command Center architecture redesign
+215118e feat: complete portfolio redesign with Ethereal Glass aesthetic
+3918023 fix: resolve Framer Motion ease type error, fix unescaped entities, bypass hydration ESLint rule
+603dfbc feat: implement responsive layout with mobile-friendly navigation and theme controls
+6727a8a update
+b8a6765 update
+9019539 update
+f42fef1 Add GitHub Actions workflow for Next.js deployment
+89f3035 deploy
+272d71b Initial commit from Create Next App
+bde9c99 Initial commit
+
+=== HIGH-CHURN FILES (last 90 days, top 20) ===
+   4 app/page.tsx
+   3 app/projects/[slug]/page.tsx
+   3 app/globals.css
+   3 app/layout.tsx
+   2 data/projects.ts
+   2 package-lock.json
+   2 package.json
+   1 app/projects/[slug]/client.tsx
+   1 app/about/page.tsx
+   1 app/contact/page.tsx
+   1 app/experience/page.tsx
+   1 app/projects/page.tsx
+   1 components/layout/AppShell.tsx
+   1 components/layout/Sidebar.tsx
+   1 components/ui/CommandMenu.tsx
+   1 components/ui/AnimatedText.tsx
+   1 components/ui/Button.tsx
+   1 components/ui/DoubleBezelCard.tsx
+   1 lib/utils.ts
+   1 Prompt.md
+
+=== MONOREPO SIGNALS ===
+No monorepo signals detected.
+
+=== CODE METRICS ===
+Total files scanned: 36
+Total lines of code: 8444
+
+Files by language:
+  Other: 18
+  TypeScript/React: 14
+  TypeScript: 4
+
+Top 10 largest files:
+package-lock.json: 250.1KB
+app\favicon.ico: 25.3KB
+app\projects\[slug]\client.tsx: 7.1KB
+app\page.tsx: 7.0KB
+app\contact\page.tsx: 6.1KB
+app\about\page.tsx: 5.8KB
+components\ui\CommandMenu.tsx: 5.5KB
+app\experience\page.tsx: 4.4KB
+app\projects\page.tsx: 4.2KB
+data\projects.ts: 3.9KB
+
+=== CI/CD PIPELINES ===
+CI/CD: GitHub Actions
+
+=== CONTAINERS & ORCHESTRATION ===
+No containerization configs detected.
+
+=== SECURITY & COMPLIANCE ===
+No security configs detected.
+
+=== PERFORMANCE & TESTING ===
+No performance testing configs detected.
+
+=== SCAN COMPLETE ===
