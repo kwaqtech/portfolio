@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Mail, MapPin, Code2, Layers, Cpu, Server } from "lucide-react";
 import { AnimatedText } from "@/components/ui/AnimatedText";
 import { CodeParticlesAnimation } from "@/components/ui/CodeParticlesAnimation";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -42,12 +43,12 @@ export default function Home() {
           transition={{ delay: 0.3, type: "spring", stiffness: 300, damping: 30 }}
           className="flex flex-wrap items-center gap-4 pt-4"
         >
-          <a href="/portfolio/projects" className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-medium rounded-md hover:bg-zinc-200 transition-colors">
+          <Link href="/projects" className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-medium rounded-md hover:bg-zinc-200 transition-colors">
             View Projects
-          </a>
-          <a href="/portfolio/contact" className="flex items-center gap-2 px-5 py-2.5 bg-[var(--color-panel)] border border-[var(--color-panel-border)] text-white text-sm font-medium rounded-md hover:bg-[var(--color-panel-hover)] transition-colors">
+          </Link>
+          <Link href="/contact" className="flex items-center gap-2 px-5 py-2.5 bg-[var(--color-panel)] border border-[var(--color-panel-border)] text-white text-sm font-medium rounded-md hover:bg-[var(--color-panel-hover)] transition-colors">
             Contact Me
-          </a>
+          </Link>
 
           <div className="w-px h-6 bg-[var(--color-panel-border)] mx-2"></div>
 
