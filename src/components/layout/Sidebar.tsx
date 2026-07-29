@@ -19,12 +19,12 @@ export function Sidebar({ onOpenCommand }: { onOpenCommand?: () => void }) {
   return (
     <aside className="hidden md:flex w-64 flex-shrink-0 border-r border-[var(--color-panel-border)] bg-[var(--color-panel)] flex-col h-full">
       <div className="p-6">
-        <h1 className="text-xl font-medium tracking-tight text-white mb-1">Minh Quang Cao</h1>
+        <h1 className="text-xl font-medium tracking-tight text-white mb-1">Cao Minh Quang</h1>
         <p className="text-sm text-[var(--color-muted-foreground)] font-mono">Software Engineer</p>
       </div>
 
       <div className="px-4 py-2 mb-4">
-        <button 
+        <button
           onClick={onOpenCommand}
           className="w-full flex items-center justify-between px-3 py-2 text-sm text-[var(--color-muted-foreground)] bg-black/40 border border-[var(--color-panel-border)] rounded-md hover:bg-white/5 transition-colors group"
         >
