@@ -17,7 +17,7 @@ export function Sidebar({ onOpenCommand }: { onOpenCommand?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 flex-shrink-0 border-r border-[var(--color-panel-border)] bg-[var(--color-panel)] flex flex-col h-full">
+    <aside className="hidden md:flex w-64 flex-shrink-0 border-r border-[var(--color-panel-border)] bg-[var(--color-panel)] flex-col h-full">
       <div className="p-6">
         <h1 className="text-xl font-medium tracking-tight text-white mb-1">Minh Quang Cao</h1>
         <p className="text-sm text-[var(--color-muted-foreground)] font-mono">Software Engineer</p>

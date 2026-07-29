@@ -1,6 +1,7 @@
 "use client";
 
 import { Sidebar } from "./Sidebar";
+import { MobileNav } from "./MobileNav";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { CommandMenu } from "@/components/ui/CommandMenu";
@@ -38,6 +39,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </motion.div>
           </AnimatePresence>
         </div>
+        <MobileNav onOpenCommand={() => setCommandOpen(true)} />
       </main>
 
       <CommandMenu open={commandOpen} setOpen={setCommandOpen} />

@@ -5,7 +5,7 @@ import "./globals.css";
 import { AppShell } from "@/components/layout/AppShell";
 
 export const metadata: Metadata = {
-  title: "Minh Quang Cao | Command Center",
+  title: "Cao Minh Quang | Command Center",
   description: "Software Engineer Portfolio",
 };
 

@@ -3,13 +3,15 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight, Mail, MapPin, Code2, Layers, Cpu, Server } from "lucide-react";
 import { AnimatedText } from "@/components/ui/AnimatedText";
+import { CodeParticlesAnimation } from "@/components/ui/CodeParticlesAnimation";
 
 export default function Home() {
   return (
     <div className="flex flex-col p-8 md:p-12 lg:p-16 max-w-[1200px] mx-auto w-full gap-16">
-      
+
       {/* Hero Section */}
-      <section className="flex flex-col gap-6 pt-4">
+      <section className="flex flex-col gap-6 pt-4 relative min-h-[500px] justify-center">
+        <CodeParticlesAnimation />
         <div className="flex items-center gap-3 text-sm font-mono text-[var(--color-muted-foreground)]">
           <span className="flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 border border-white/10">
             <MapPin className="w-3.5 h-3.5" />
@@ -22,10 +24,10 @@ export default function Home() {
         </div>
 
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-white leading-[1.1]">
-          <AnimatedText text="Minh Quang Cao" el="span" />
+          <AnimatedText text="Cao Minh Quang" el="span" />
         </h1>
 
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 30 }}
@@ -34,22 +36,21 @@ export default function Home() {
           I build high-performance software systems. Currently focusing on scalable backend architectures, distributed systems, and elegant API design.
         </motion.p>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, type: "spring", stiffness: 300, damping: 30 }}
           className="flex flex-wrap items-center gap-4 pt-4"
         >
-          <a href="/projects" className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-medium rounded-md hover:bg-zinc-200 transition-colors">
+          <a href="/portfolio/projects" className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-medium rounded-md hover:bg-zinc-200 transition-colors">
             View Projects
           </a>
-          <a href="mailto:caomq12062004@gmail.com" className="flex items-center gap-2 px-5 py-2.5 bg-[var(--color-panel)] border border-[var(--color-panel-border)] text-white text-sm font-medium rounded-md hover:bg-[var(--color-panel-hover)] transition-colors">
-            <Mail className="w-4 h-4" />
+          <a href="/portfolio/contact" className="flex items-center gap-2 px-5 py-2.5 bg-[var(--color-panel)] border border-[var(--color-panel-border)] text-white text-sm font-medium rounded-md hover:bg-[var(--color-panel-hover)] transition-colors">
             Contact Me
           </a>
-          
+
           <div className="w-px h-6 bg-[var(--color-panel-border)] mx-2"></div>
-          
+
           <a href="https://github.com/kwaqtech" target="_blank" rel="noreferrer" className="p-2.5 bg-[var(--color-panel)] border border-[var(--color-panel-border)] text-[var(--color-muted-foreground)] rounded-md hover:text-white hover:bg-[var(--color-panel-hover)] transition-colors">
             <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current"><path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.17c-3.34.73-4.04-1.41-4.04-1.41-.55-1.37-1.33-1.74-1.33-1.74-1.09-.73.08-.72.08-.72 1.2.09 1.84 1.22 1.84 1.22 1.07 1.83 2.8 1.3 3.48 1 .11-.77.42-1.3.76-1.6-2.67-.3-5.47-1.31-5.47-5.86 0-1.3.47-2.37 1.24-3.2-.13-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.22a11.53 11.53 0 0 1 6 0c2.29-1.54 3.3-1.22 3.3-1.22.66 1.65.25 2.88.12 3.18.77.83 1.24 1.9 1.24 3.2 0 4.56-2.8 5.56-5.48 5.86.43.37.81 1.1.81 2.22v3.3c0 .32.22.7.83.58A12 12 0 0 0 12 .5Z" /></svg>
           </a>
@@ -80,7 +81,7 @@ export default function Home() {
         ].map((feat, i) => {
           const Icon = feat.icon;
           return (
-            <motion.div 
+            <motion.div
               key={feat.title}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -100,7 +101,7 @@ export default function Home() {
       </section>
 
       {/* About Section snippet */}
-      <motion.section 
+      <motion.section
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, type: "spring", stiffness: 300, damping: 30 }}
@@ -109,7 +110,7 @@ export default function Home() {
         <h2 className="text-2xl font-semibold text-white tracking-tight">About Me</h2>
         <div className="prose prose-invert prose-p:text-[var(--color-muted-foreground)] prose-p:leading-relaxed max-w-4xl">
           <p>
-            I am a Software Engineer deeply passionate about backend systems, distributed architecture, and the intersection of product and engineering. 
+            I am a Software Engineer deeply passionate about backend systems, distributed architecture, and the intersection of product and engineering.
             My journey into computer science began with a fascination for how data moves and systems scale. Since then, I've dedicated myself to mastering the complexities of building software that not only works but is robust, secure, and elegant.
           </p>
           <p>
@@ -117,7 +118,7 @@ export default function Home() {
           </p>
         </div>
       </motion.section>
-      
+
       {/* Footer Spacer */}
       <div className="h-16" />
     </div>
